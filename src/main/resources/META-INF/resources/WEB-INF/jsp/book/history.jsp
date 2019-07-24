@@ -9,17 +9,15 @@
     <table class="table table-striped table-sm">
         <thead>
             <tr>
-                <th scope="col">순위</th>
                 <th scope="col">Keyword</th>
-                <th scope="col">검색횟수</th>
+                <th scope="col">검색일시</th>
             </tr>
         </thead>
     <tbody>
-        <c:forEach items="${topten}" var="list" varStatus="status" >
+        <c:forEach items="${histories}" var="list" >
             <tr>
-                <td><c:out value="${status.index + 1}"/></td>
-                <td><c:out value="${list[0]}"/></td>
-                <td><c:out value="${list[1]}"/></td>
+                <td><c:out value="${list.keyword}"/></td>
+                <td><c:out value="${list.date}"/></td>
             </tr>
         </c:forEach>
     </tbody>

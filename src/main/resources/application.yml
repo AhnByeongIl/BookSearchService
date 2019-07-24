@@ -1,7 +1,7 @@
 # Database Settings
 spring:
   datasource:
-    url: jdbc:h2:mem:h2_jpa_sample;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     platform: h2
     username: sa
     password:
@@ -24,3 +24,13 @@ spring:
       settings:
         trace: false
         web-allow-others: false
+
+spring.http.encoding:
+  force: true
+  force-request: true
+  force-response: true
+
+server.tomcat.uri-encoding: UTF-8
+
+spring.mvc.custom-uri-logging-filter.enabled: true
+spring.mvc.custom-uri-logging-filter.level: info

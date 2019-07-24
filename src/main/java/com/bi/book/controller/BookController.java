@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -91,8 +92,13 @@ public class BookController {
         ModelAndView mv = new ModelAndView();
 
         List<SearchHistory> histories = bookRepository.findTop10GroupByKeyword();
+        List<SearchHistory> topTen = new ArrayList<>();
+        int end = histories.size() > 10 ? 10 : histories.size();
+        for (int i=0; i<end; i++) {
+            topTen.add(histories.get(i));
+        }
 
-        mv.addObject("histories", histories);
+        mv.addObject("topten", topTen);
         mv.setViewName("book/topten");
         return mv;
     }

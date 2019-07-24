@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Optional;
-
 @RunWith(SpringRunner.class)
 //@SpringBootTest
 @DataJpaTest
@@ -43,7 +41,7 @@ public class AccountRepositoryTest {
     @Test
     public void abtest() {
         insertTest();
-        Optional<Account> result = accountRepository.findById(85L);
+//        Optional<Account> result = accountRepository.findById(85L);
 //        result.ifPresent(account -> log.info("account : "+account));
         log.info("##########################\n"+accountRepository.findAll());
     }
