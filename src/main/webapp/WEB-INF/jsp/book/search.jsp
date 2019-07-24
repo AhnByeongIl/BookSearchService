@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
-<div class="container">
     <select class="selectpicker" id="type" name="type">
         <option value="title">title</option>
         <option value="isbn">isbn</option>
@@ -51,8 +50,6 @@
         </div>
     </div>
 
-</div>
-
 <script>
 
 (function (window, $, undefined) {
@@ -83,7 +80,7 @@
                 if (!isDisbled) {
                     var prevPage = Number($('.page-num:first a').text()) - 10;
                     $('#curPage').val(prevPage);
-                    bookSearchPage.requestGetBook($('#searchedType').val(), $('#searchedKeyword').val(), prevPage);
+                    bookSearchPage.requestGetBook($('#searchedType').val(), $('#searchedKeyword').val(), prevPage, 'false');
                 }
             });
             $('.pagination #nextTen').on('click', function(e) {
@@ -91,15 +88,16 @@
                 if (!isDisbled) {
                     var nextPage = Number($('.page-num:last a').text()) + 1;
                     $('#curPage').val(nextPage);
-                    bookSearchPage.requestGetBook($('#searchedType').val(), $('#searchedKeyword').val(), nextPage);
+                    bookSearchPage.requestGetBook($('#searchedType').val(), $('#searchedKeyword').val(), nextPage, 'false');
                 }
 
             });
         },
-        requestGetBook: function(type, keyword, page) {
+        requestGetBook: function(type, keyword, page, isSearch) {
             var searchKeyword = encodeURI(keyword, 'UTF-8');
+            isSearch = isSearch == undefined ? 'true' : isSearch;
             $.get('/book/search/' + type + '/' + searchKeyword,
-                {records: $('#records').val(), page: page})
+                {records: $('#records').val(), page: page, isSearch: isSearch})
                 .done(function (data) {
                     console.log(data);
                     bookSearchPage.bindingTableData(data);
@@ -176,7 +174,7 @@
                 var page = $('.pagination li.active a').text();
                 page = (page=='') ? 1 : page;
                 $.get('/book/search/' + type + '/' + searchKeyword,
-                    {records: $('#records').val(), page: page})
+                    {records: $('#records').val(), page: page, isSearch: 'false'})
                     .done(function (data) {
                         console.log(data);
                         bookSearchPage.bindingTableData(data, true);

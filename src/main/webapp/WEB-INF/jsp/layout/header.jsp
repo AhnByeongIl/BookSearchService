@@ -2,8 +2,8 @@
     <a id="home" class="navbar-brand mr-md-auto logo" href="/">Book Search Service</a>
     <nav id="nav" class="my-2 my-md-0 mr-md-3">
                     <a id="bookSearch" class="p-2 text-dark" href="/book/search">Search</a>
-                    <a id="mHistory" class="p-2 text-dark" >My History</a>
-                    <a id="topTen" class="p-2 text-dark" >Top10</a>
+                    <a id="mHistory" class="p-2 text-dark" href="/book/myhistory">My History</a>
+                    <a id="topTen" class="p-2 text-dark" href="/book/topten">Top10</a>
     </nav>
 
     <div id="accountArea">

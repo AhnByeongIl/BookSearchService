@@ -1,9 +1,13 @@
 package com.bi.book.service;
 
 import com.bi.book.entity.*;
+import com.bi.book.repository.BookRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,9 +17,12 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 
 @Service
 public class BookServiceImpl {
+    @Autowired
+    private BookRepository bookRepository;
 
     public BookList sendReqeustBookApi(BookReqeustInfo reqInfo) {
         BookList rtnInfo = null;
@@ -126,5 +133,30 @@ public class BookServiceImpl {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public void insertHistory(SearchHistory history) {
+        bookRepository.save(history);
+    }
+
+    public BookList bookSearchLogic(BookReqeustInfo reqInfo) {
+
+        BookList rtnInfo = this.sendReqeustBookApi(reqInfo);
+
+        // 검색버튼을 이용한 검색만 history 저장
+        if ("true".equals(reqInfo.getIsSearch())) {
+
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserDetails authUser = (UserDetails) principal;
+            String authUserName = authUser.getUsername();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SearchHistory history = SearchHistory.builder()
+                    .uid(authUserName)
+                    .keyword(reqInfo.getKeyword())
+                    .date(format.format(System.currentTimeMillis()))
+                    .build();
+            this.insertHistory(history);
+        }
+        return rtnInfo;
     }
 }
