@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/account")
 public class AccountController {
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @PostMapping("/create")
     public String create(Account account) {
@@ -25,9 +25,13 @@ public class AccountController {
         account.setPwd(encoder.encode(account.getPwd()));
         role.setRoleName("BASIC");
 //        account.setRoles(Arrays.asList(role));
-        accountRepository.save(account);
+        try {
+            accountRepository.save(account);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        return "redirect:/";
+        return "redirect:/account/login";
     }
 
     @GetMapping("/login")
@@ -35,6 +39,10 @@ public class AccountController {
         String referer = req.getHeader("Referer");
         req.getSession().setAttribute("prevPage", referer);
         return "account/login";
+    }
+    @GetMapping("/logout")
+    public String logoutRedirect(HttpServletRequest req) {
+        return "redirect:/logout";
     }
 
     @GetMapping("/signUp")

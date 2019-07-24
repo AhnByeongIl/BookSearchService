@@ -1,2 +1,9 @@
 /* Main CSS */
 .paddingAll30 {padding : 30px}
+
+/* HEADER */
+a.logo {cursor : pointer; color : #007bff; border-color : #007bff; font-weight : bold}
+/*a {cursor : pointer}*/
+
+/* Pagenation */
+.pagination a.page-link {cursor : pointer}

@@ -15,11 +15,6 @@ public class KBookInfo extends BookList {
 
     public void setBookData() {
         for (document doc : documents) {
-            /*Book book = new Book();
-            book.setTitle(doc.getTitle());
-            book.setAuthors(doc.getAuthors().toString());
-            book.setIsbn(doc.getIsbn());
-            book.setPublisher(doc.getPublisher());*/
             Book book = Book.builder()
                     .title(doc.getTitle())
                     .authors(doc.getAuthors().toString())
@@ -30,9 +25,11 @@ public class KBookInfo extends BookList {
                     .price(doc.getPrice())
                     .salePrice(doc.getSalePrice())
                     .thumbnail(doc.getThumbnail()).build();
-
             super.getRows().add(book);
+
+
         }
+        super.setTotal(meta.getTotal_count());
     }
 }
 
@@ -40,9 +37,9 @@ public class KBookInfo extends BookList {
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 class meta {
-    private String isEnd;
-    private String pageableCount;
-    private String totalCount;
+    private String is_end;
+    private int pageable_count;
+    private int total_count;
 }
 
 @Getter

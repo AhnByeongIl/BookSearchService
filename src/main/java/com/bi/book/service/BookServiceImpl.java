@@ -21,13 +21,11 @@ public class BookServiceImpl {
         BookList rtnInfo = null;
         ResponseEntity response;
         String type = reqInfo.getType();
-        String keyword= reqInfo.getKeyword();
         try {
             String searchFlag = "K";
-            response = KakaoBookApi(type, keyword);
-            HttpStatus status;
-            if (response == null || !HttpStatus.OK.equals(status=response.getStatusCode())) {
-                response = NaverBookApi(type, keyword);
+            response = KakaoBookApi(reqInfo);
+            if (response == null || !HttpStatus.OK.equals(response.getStatusCode())) {
+                response = NaverBookApi(reqInfo);
                 searchFlag = "N";
             }
 
@@ -43,14 +41,20 @@ public class BookServiceImpl {
                 }
             }
             rtnInfo.setBookData();
+
+            int pageCnt = rtnInfo.getTotal()==0? 1 : (rtnInfo.getTotal()/reqInfo.getSize() + (rtnInfo.getTotal()%reqInfo.getSize()!=0 ? 1: 0));
+            rtnInfo.setPageCnt(pageCnt);
         } catch (Exception e) {
-            System.out.println(e);
             e.printStackTrace();
         }
         return rtnInfo;
     }
 
-    private ResponseEntity KakaoBookApi(String type, String keyword) {
+    private ResponseEntity KakaoBookApi(BookReqeustInfo reqInfo) {
+        String type = reqInfo.getType();
+        String keyword= reqInfo.getKeyword();
+        int size = reqInfo.getSize();
+        int page = reqInfo.getPage();
         String apiURL = "https://dapi.kakao.com/v3/search/book";
         String header = "KakaoAK dea18bc3a6879f5062e4912103aee309";
 
@@ -63,7 +67,7 @@ public class BookServiceImpl {
         HttpEntity entity = new HttpEntity("parameters", headers);
         try {
             keyword = URLEncoder.encode(keyword, "UTF-8");
-            apiURL = apiURL + "?target=" + type + "&query=" + keyword;
+            apiURL = apiURL + "?target=" + type + "&query=" + keyword + "&size="+size+"&page="+page;
             URI uri = URI.create(apiURL);
             response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
         } catch (Exception e) {
@@ -71,7 +75,11 @@ public class BookServiceImpl {
         }
         return response;
     }
-    private ResponseEntity NaverBookApi(String type, String keyword) {
+    private ResponseEntity NaverBookApi(BookReqeustInfo reqInfo) {
+        String type = reqInfo.getType();
+        String keyword= reqInfo.getKeyword();
+        int display = reqInfo.getSize();
+        int start = reqInfo.getPage();
         String apiURL = "";
         String apiListURL = "https://openapi.naver.com/v1/search/book.json?query=";
         String apiDetailURL = "https://openapi.naver.com/v1/search/book_adv.xml?d_isbn=";
@@ -95,7 +103,7 @@ public class BookServiceImpl {
             HttpEntity entity = new HttpEntity("parameters", headers);
 
             keyword = URLEncoder.encode(keyword, "UTF-8");
-            apiURL += keyword;
+            apiURL += keyword + "&display="+display+"&start="+start;
             URI uri = URI.create(apiURL);
 
             response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);

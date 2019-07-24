@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
@@ -37,26 +37,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception
     {
-        web.ignoring().antMatchers("/css/**", "/script/**", "image/**", "/fonts/**", "lib/**");
+        web.ignoring().antMatchers("/assets/**","/console/**", "/");
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
         http.csrf().disable().authorizeRequests()
+                .antMatchers("/console/**").permitAll()
+                .antMatchers("/account/**").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/**").permitAll()
-                .and()
-                .authorizeRequests().antMatchers("/console/**").permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable()
                 .and()
                 .formLogin()
                 .loginPage("/account/login")
-                .loginProcessingUrl("/account/login")
-                .defaultSuccessUrl("/account/success")
+                .defaultSuccessUrl("/book/search")
+                .usernameParameter("username")
+                .passwordParameter("password")
                 .failureUrl("/account/fail")
                 .and()
-                .logout();
+                .logout().logoutSuccessUrl("/account/login");
     }
 
 

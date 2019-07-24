@@ -12,8 +12,8 @@ import java.util.List;
 public class NBookInfo extends BookList {
     private String lastBuildDate;
     private int total;
-    private String start;
-    private String display;
+    private int start;
+    private int display;
     private List<item> items;
 
     public void setBookData() {
@@ -36,6 +36,7 @@ public class NBookInfo extends BookList {
 
             super.getRows().add(book);
         }
+        super.setTotal(total);
     }
 }
 @Getter

@@ -1,4 +1,3 @@
-<div class="container">
     <form class="signup-form" action="/account/create" method="POST">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
@@ -22,4 +21,3 @@
         </div>
         <input class="signup-btn waves-effect waves-light btn" type="submit" value="Sign Up" />
     </form>
-</div>

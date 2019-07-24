@@ -15,7 +15,7 @@ public abstract class BookList {
     private int records;
     private int total;
     private List<Book> rows;
-    private int totalCnt;
+    private int pageCnt;
 
     public abstract void setBookData();
 

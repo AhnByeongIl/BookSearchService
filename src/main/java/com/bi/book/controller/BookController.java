@@ -5,16 +5,13 @@ import com.bi.book.entity.BookReqeustInfo;
 import com.bi.book.service.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/book")
 public class BookController {
     @Autowired
-    BookServiceImpl bookService;
+    private BookServiceImpl bookService;
 
     @GetMapping("/search")
     public String searchPage() {
@@ -23,11 +20,15 @@ public class BookController {
 
     @GetMapping("/search/{type}/{keyword}")
     @ResponseBody
-    public BookList searchBooks(@PathVariable("type") String type, @PathVariable("keyword") String keyword) {
+    public BookList searchBooks(@PathVariable("type") String type
+            , @PathVariable("keyword") String keyword
+            , int records, int page) {
         BookList rtnInfo = null;
-        BookReqeustInfo reqInfo = new BookReqeustInfo();
-        reqInfo.setType(type);
-        reqInfo.setKeyword(keyword);
+        BookReqeustInfo reqInfo = BookReqeustInfo.builder()
+                .type(type)
+                .keyword(keyword)
+                .size(records)
+                .page(page).build();
         rtnInfo = bookService.sendReqeustBookApi(reqInfo);
 
 //        bookService.insertHistory
@@ -35,6 +36,17 @@ public class BookController {
         return rtnInfo;
     }
 
+    @GetMapping("/detail/{isbn}")
+    @ResponseBody
+    public BookList detailPage(@PathVariable("isbn") String keyword) {
+        BookList rtnInfo = null;
+        String[] keywords = keyword.split(" ");
+        BookReqeustInfo reqInfo = BookReqeustInfo.builder()
+                .type("isbn")
+                .keyword(keywords[0]).build();
+        rtnInfo = bookService.sendReqeustBookApi(reqInfo);
 
+        return rtnInfo;
+    }
 
 }

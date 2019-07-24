@@ -1,4 +1,3 @@
-<div class="container">
     <form class="login-form" method="POST">
         <input type ="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <div class="row">
@@ -15,4 +14,3 @@
         </div>
         <input class="login-btn waves-effect waves-light btn" type="submit" value="LOGIN" />
     </form>
-</div>
